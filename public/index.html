@@ -6,25 +6,26 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed&display=swap" rel="stylesheet">
     </head>
     <body>
         <script src="" defer></script>
         <div id="container">
             <div id="container-top">
-                <h1>Top</h1>
+                <h1>Chat Application</h1>
             </div>
             <div id="container-center">
                 <div id="rooms">
-                    <h1>Rooms</h1>
+                    <h2>Rooms</h2>
                 </div>
                 <div id="chat">
                     <div id="text">
-                        <h1>Text</h1>
+                        <h2>Room Name</h2>
                     </div>
-                    <div id="message-box">
-                        <input type="text" id="message" />
-                        <img src="msgIcon.svg" />
-                    </div>
+                    <form id="message-box">
+                        <input type="text" id="message" autocomplete="off" />
+                        <input type="image" id="submit" src="msgIcon.svg" alt="submit" />
+                    </form>
                 </div>
             </div>
             <div id="container-bottom">
