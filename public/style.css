@@ -33,7 +33,7 @@ h2 {
 
 input[type=text] {
     border: none;
-    background-color: var(--lightest);
+    background-color: transparent;
 }
 
 input:focus {
@@ -101,7 +101,7 @@ input:focus {
 
 #message-box {
     box-sizing: border-box;
-    padding: 1vw;
+    padding: 10px 10px 10px 20px;
     height: 10%;
     display: flex;
     align-items: center;
@@ -110,7 +110,7 @@ input:focus {
 }
 
 #submit {
-    width: 5%;
+    width: 37px;
     height: auto;
     float: right;
 }   
