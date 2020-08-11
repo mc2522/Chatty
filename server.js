@@ -13,8 +13,9 @@ require('dotenv').config()
 app.use(express.static(path.join(__dirname, 'public')))
 
 io.on('connection', socket => {
-    console.log('New socket connection')
-    socket.emit('message', 'Welcome to Chat App')
+    socket.on('message', message => {
+        io.emit('message', message)
+    })
 })
 
 const PORT = process.env.PORT || 3000
