@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html> 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,16 +6,30 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
-        
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed&family=Noto+Sans&display=swap" rel="stylesheet">
     </head>
-    <body> 
-        <script src="/socket.io/socket.io.js" defer></script>  
-        <script src="homeScript.js" defer></script>
-        <!--action="/chat.html"-->
-        <form action="/chat.html">
-            <h2>Enter your desired name:</h2>
-            <input type="text" id="name-input" autocomplete="off" />
-            <button id="submit-button" type="submit">Submit</button>
-        </form>
+    <body>
+        <div id="container">
+            <div id="container-top">
+                <h1>Chatty</h1>
+            </div>
+            <div id="container-center">
+                <div id="rooms">
+                    <h2>Rooms</h2>
+                    <div id="rooms_list">
+                        <button id="general" class="room_button" >General</button>
+                    </div>
+                </div>
+                <div id="chat">
+                    <h2 id="room_name">General</h2>
+                    <div id="text"></div>
+                    <input type="text" id="message-box" autocomplete="off" />
+                </div>
+            </div>
+            <div id="container-bottom">
+            </div>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

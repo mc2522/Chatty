@@ -9,11 +9,9 @@ const io = socketio(server)
 
 require('dotenv').config()
 
-// static files
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', socket => {
-    io.emit('message', "CONNECTED")
     socket.on('message', message => {
         io.emit('message', message)
     })
