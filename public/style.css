@@ -4,6 +4,7 @@
     --normal: #ffb27a;
     --dark: #ff924a;
     --darkest: #ff721a;
+    --edge: #D25F00;
     --text-color: #E65800;
     --header-font: 'Asap Condensed', sans-serif;
 }
@@ -24,14 +25,10 @@
 body {
     margin: 0;
     height: 100vh;
-    background-color: var(--darkest);
+    background-color: var(--edge);
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-h2, p {
-    margin: 0 0 2% 0;
 }
 
 h1 {
@@ -47,11 +44,12 @@ h2 {
 }
 
 p {
-    margin: 1% 0;
-    font-family: var(--header-font);
+    margin: 0 5px 5px 10px;
+    font-size: 1em;
 }
 
 input[type=text] {
+    margin: 10px;
     border: none;
     background-color: transparent;
 }
@@ -62,12 +60,12 @@ input:focus {
 
 #container {
     width: 80vw;
-    height: 65%;
+    height: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: var(--dark);
+    background-color: var(--darkest);
     border-radius: 15px;
 }
 
@@ -108,8 +106,38 @@ input:focus {
     background-color: var(--normal);
 }
 
-#chat {
+#rooms>h2 {
+    margin: 0 0 10px 0;
+}
+
+.room_button {
+    border: 2px solid var(--darkest);
+    background-color: var(--light);
+    color: var(--darkest);
+    border-radius: 25px;
+    margin: 2px;
     width: 100%;
+    height: 4vh;
+    font-family: var(--header-font);
+    font-size: 1em;
+}
+
+.room_button:hover, .room_button:active {
+    background-color: var(--darkest);
+    color: var(--lightest);
+}
+
+#room_name {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 10px;
+    margin: 0 0 10px 0;
+}
+
+#chat {
+    right: 0;
+    width: 100%;
+    padding: 0;
     display: flex;
     flex-direction: column;
     background-color: var(--light);
@@ -133,7 +161,7 @@ input:focus {
     align-items: center;
     background-color: var(--lightest);
     border-radius: 25px;
-    font-size: 1.3em;
+    font-size: 1em;
     color: var(--text-color);
 }
 
