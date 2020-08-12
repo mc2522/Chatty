@@ -13,8 +13,13 @@ require('dotenv').config()
 app.use(express.static(path.join(__dirname, 'public')))
 
 io.on('connection', socket => {
+    io.emit('message', "CONNECTED")
     socket.on('message', message => {
         io.emit('message', message)
+    })
+    socket.on('name', name => {
+        socket.emit(name)
+        console.log(name)
     })
 })
 

@@ -1,12 +1,17 @@
 :root {
-    --lightest: #fff2da	;
-    --light: #ffd2aa;
-    --normal: #ffb27a;
-    --dark: #ff924a;
-    --darkest: #ff721a;
-    --edge: #D25F00;
+    --color1: #162447;
+    --color2: #1f4068;
+    --color3: #1b1b2f;
+    --color4: #e43f5a;
+    --ice-cold: #a0d2eb;
+    --color5: #e5eaf5;
+    --medium-purple: #d0bdf4;
+    --purple-pain: #8458B3;
+    --heavy-purple: #a28089;
+    --edge: #a28089;
     --text-color: #E65800;
     --header-font: 'Asap Condensed', sans-serif;
+    --text-font: 'Noto Sans', sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -15,30 +20,30 @@
 
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background: var(--dark);
+    background: var(--purple-pain);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--darkest);
+    background: var(--heavy-purple);
 }
 
 body {
     margin: 0;
     height: 100vh;
-    background-color: var(--edge);
+    background-color: var(--color3);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 h1 {
-    color: var(--lightest);
+    color: var(--color5);
     font-family: var(--header-font);
     font-size: 2.1em;
 }
 
 h2 {
-    color: var(--darkest);
+    color: var(--color5);
     font-family: var(--header-font);
     font-size: 2em;
 }
@@ -46,16 +51,43 @@ h2 {
 p {
     margin: 0 5px 5px 10px;
     font-size: 1em;
+    color: var(--color5);
+    font-family: var(--text-font);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
 }
 
 input[type=text] {
+    box-sizing: border-box;
+    padding: 10px 20px;
     margin: 10px;
     border: none;
-    background-color: transparent;
+    background-color: var(--color5);
+    border-radius: 25px;
+    font-size: 1em;
+    color: var(--text-color);
 }
 
 input:focus {
     outline: none;
+}
+
+#name-input {
+    width: 100%;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+#submit-button {
+    width: 100%;
+    font-size: 1em;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-family: var(--header-font);
+    color: var(--color1);
 }
 
 #container {
@@ -65,7 +97,7 @@ input:focus {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: var(--darkest);
+    background-color: var(--color4);
     border-radius: 15px;
 }
 
@@ -103,7 +135,7 @@ input:focus {
 #rooms {
     width: 30%; 
     min-width: 10vw;
-    background-color: var(--normal);
+    background-color: var(--color1);
 }
 
 #rooms>h2 {
@@ -111,25 +143,25 @@ input:focus {
 }
 
 .room_button {
-    border: 2px solid var(--darkest);
-    background-color: var(--light);
-    color: var(--darkest);
+    border: 2px solid var(--heavy-purple);
+    background-color: var(--color5);
+    color: var(--heavy-purple);
     border-radius: 25px;
     margin: 2px;
     width: 100%;
     height: 4vh;
-    font-family: var(--header-font);
+    font-family: var(--text-font);
     font-size: 1em;
 }
 
 .room_button:hover, .room_button:active {
-    background-color: var(--darkest);
-    color: var(--lightest);
+    background-color: var(--heavy-purple);
+    color: var(--ice-cold);
 }
 
 #room_name {
-    background-color: var(--dark);
-    color: var(--light);
+    background-color: var(--purple-pain);
+    color: var(--color5);
     padding: 10px;
     margin: 0 0 10px 0;
 }
@@ -140,7 +172,7 @@ input:focus {
     padding: 0;
     display: flex;
     flex-direction: column;
-    background-color: var(--light);
+    background-color: var(--color2);
 }
 
 #text {
@@ -159,10 +191,6 @@ input:focus {
     height: 10%;
     display: flex;
     align-items: center;
-    background-color: var(--lightest);
-    border-radius: 25px;
-    font-size: 1em;
-    color: var(--text-color);
 }
 
 /**
