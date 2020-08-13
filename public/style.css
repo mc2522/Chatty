@@ -3,12 +3,7 @@
     --color2: #1f4068;
     --color3: #1b1b2f;
     --color4: #e43f5a;
-    --ice-cold: #a0d2eb;
     --color5: #e5eaf5;
-    --medium-purple: #d0bdf4;
-    --purple-pain: #8458B3;
-    --heavy-purple: #a28089;
-    --edge: #a28089;
     --text-color: #E65800;
     --header-font: 'Asap Condensed', sans-serif;
     --text-font: 'Noto Sans', sans-serif;
@@ -76,19 +71,38 @@ input:focus {
     outline: none;
 }
 
-#name-input {
+#identifier {
     width: 100%;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--color3);
+}
+
+#name-input, #submit-button {
+    width: 40%
+}
+
+#name-input {
     margin: 0 0 10px 0;
     text-align: center;
 }
 
 #submit-button {
-    width: 100%;
     font-size: 1em;
     border-radius: 25px;
     padding: 10px 20px;
     font-family: var(--header-font);
-    color: var(--color1);
+    background-color: var(--color4);
+    border: none;
+    color: var(--color5)
+}
+
+#submit-button:active, #submit-button:hover, #submit-button:focus {
+    outline: none;
 }
 
 #container {
