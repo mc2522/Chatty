@@ -23,7 +23,12 @@ io.on('connection', socket => {
     io.emit('numberUsers', sockets.size)
     // send message to all sockets
     socket.on('message', message => {
-        io.emit('message', `${sockets.get(socket)}: ${message}`)
+        let name = sockets.get(socket)
+        if (name != null) {
+            io.emit('message', `${name}: ${message}`)
+        } else {
+            io.emit('reload', true)
+        }
     })
     // check if name exists already, then add as appropriate
     socket.on('name', name => {
