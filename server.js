@@ -19,6 +19,7 @@ io.on('connection', socket => {
         io.emit('message', message)
     })
     socket.on('name', name => {
+        console.log(users.has(name))
         if (users.has(name)) {
             socket.emit('user', false)
         } else {
