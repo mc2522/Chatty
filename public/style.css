@@ -4,23 +4,23 @@
     --color3: #1b1b2f;
     --color4: #e43f5a;
     --color5: #e5eaf5;
+    --color6: #17355a;
     --text-color: #E65800;
     --header-font: 'Asap Condensed', sans-serif;
     --text-font: 'Noto Sans', sans-serif;
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
-    padding: 0 10px;    
+    width: 5px;    
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background: var(--purple-pain);
+    background: var(--color1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--heavy-purple);
+    background: var(--color4);
 }
 
 body {
@@ -177,7 +177,7 @@ input:focus {
 
 #room_name {
     box-sizing: border-box;
-    background-color: var(--purple-pain);
+    background-color: var(--color6);
     color: var(--color5);
     padding: 5px 10px;
     margin: 0;
@@ -202,8 +202,6 @@ input:focus {
 
 #text { 
     box-sizing: border-box;
-    width: calc(100% - 20px);
-    max-width: calc(100% - 20px);
     height: calc(90% - 10px);
     overflow-y: scroll;
     overflow-wrap: break-word;

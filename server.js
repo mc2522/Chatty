@@ -9,14 +9,6 @@ const io = socketio(server)
 
 require('dotenv').config()
 
-// class that binds a name to a socket
-class Pair {
-    constructor(socket, name) {
-        this.socket = socket
-        this.name = name
-    }
-}
-
 // stores all in-use names
 const names = new Set()
 // stores all sockets
@@ -28,10 +20,10 @@ io.on('connection', socket => {
     sockets.set(socket, null)
     // TEST console.log(sockets.size)
     // send number of users data to newly connected socket
-    socket.emit('numberUsers', sockets.size)
+    io.emit('numberUsers', sockets.size)
     // send message to all sockets
     socket.on('message', message => {
-        io.emit('message', message)
+        io.emit('message', `${sockets.get(socket)}: ${message}`)
     })
     // check if name exists already, then add as appropriate
     socket.on('name', name => {
