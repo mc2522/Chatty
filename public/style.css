@@ -16,6 +16,7 @@
 
 ::-webkit-scrollbar {
     width: 5px;
+    padding: 0 10px;    
 }
 
 ::-webkit-scrollbar-thumb {
@@ -49,7 +50,7 @@ h2 {
 }
 
 p {
-    margin: 0 5px 5px 10px;
+    margin: 3px 5px 3px 10px;
     font-size: 1em;
     color: var(--color5);
     font-family: var(--text-font);
@@ -134,7 +135,8 @@ input:focus {
 
 #rooms {
     width: 30%; 
-    min-width: 10vw;
+    min-width: 30%;
+    max-width: 30%;
     background-color: var(--color1);
 }
 
@@ -160,34 +162,46 @@ input:focus {
 }
 
 #room_name {
+    box-sizing: border-box;
     background-color: var(--purple-pain);
     color: var(--color5);
-    padding: 10px;
-    margin: 0 0 10px 0;
+    padding: 5px 10px;
+    margin: 0;
+    height: 10%;
+
 }
 
 #chat {
     right: 0;
-    width: 100%;
+    width: 70%;
     padding: 0;
     display: flex;
     flex-direction: column;
     background-color: var(--color2);
 }
 
-#text {
-    width: 100%;
-    max-width: 100%;
+#formatter {
+    max-height: auto;
     height: 90%;
+    box-sizing: border-box;
+    padding: 0 10px 10px 10px;
+}
+
+#text { 
+    box-sizing: border-box;
+    width: calc(100% - 20px);
+    max-width: calc(100% - 20px);
+    height: calc(90% - 10px);
     overflow-y: scroll;
-    text-overflow: clip;
+    overflow-wrap: break-word;
     white-space: initial;
 }
 
 #message-box {
     box-sizing: border-box;
-    margin-top: 10px;
     padding: 10px 20px;
+    margin: 10px 0 0 0;
+    width: 100%;
     height: 10%;
     display: flex;
     align-items: center;
