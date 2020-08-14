@@ -1,5 +1,6 @@
 const http = require('http')
 const path = require('path')
+const please = require('pleasejs')
 const express = require('express')
 const socketio = require('socket.io')
 
@@ -9,12 +10,22 @@ const io = socketio(server)
 
 require('dotenv').config()
 
-// stores all in-use names
+// Stores all in-use names
 const names = new Set()
-// stores all sockets
+// Stores all sockets
 const sockets = new Map()
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Chooses a random color for each user to be displayed when chatting
+const randomColorPicker = () => {
+    return please.make_color({
+        saturation: 1,
+        value: 1,
+        golden: false,
+        format: 'hex'
+    })
+}
 
 io.on('connection', socket => {
     sockets.set(socket, null)
@@ -23,9 +34,13 @@ io.on('connection', socket => {
     io.emit('numberUsers', sockets.size)
     // send message to all sockets
     socket.on('message', message => {
-        let name = sockets.get(socket)
-        if (name != null) {
-            io.emit('message', `${name}: ${message}`)
+        let socketProps = sockets.get(socket)
+        if (socketProps != null && socketProps.name != null) {
+            io.emit('message', {
+                'name': socketProps.name,
+                'color': socketProps.color,
+                'content': message
+            })
         } else {
             io.emit('reload', true)
         }
@@ -39,7 +54,10 @@ io.on('connection', socket => {
             names.add(name)
             // replace pairs
             sockets.delete(socket)
-            sockets.set(socket, name)
+            sockets.set(socket, {
+                'name': name,
+                'color': randomColorPicker()
+            })
             // notify socket that username is available
             socket.emit('user', true)
             // if users' size increases, send new number of users to all sockets
@@ -51,9 +69,9 @@ io.on('connection', socket => {
     // on disconnect, remove the socket and name
     socket.on('disconnect', () => {
         // remove name from in-use names
-        let name = sockets.get(socket)
-        if (name != null)
-            names.delete(name)
+        let s = sockets.get(socket)
+        if (s != null) 
+            names.delete(s.name)
         // remove socket pair
         sockets.delete(socket)
         // if users' size decreases, send new number of users to all sockets
@@ -66,3 +84,11 @@ io.on('connection', socket => {
 const PORT = process.env.PORT || 3000
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
+
+/**
+ * Plan:
+ * 
+ * Use store.js to store messages in each room
+ * Each room will remain for 15 minutes since last active message
+ * Each room will store 250 messages
+ */
