@@ -29,13 +29,13 @@ const createModel = (room_name) => {
     const schema = new mongoose.Schema({
         name: String,
         message: String
-    }, { collection: `ChattyDB-${room_name}`, size: 250 })
+    }, { collection: `${process.env.COLLECTION_PREFIX}-${room_name}`, size: 250 }) // find workaround for max size such as removing the oldest item and appending new item
 
     return new mongoose.model(`storage_${room_name}`, schema)
 }
 
 const deleteCollection = (room_name) => {
-    mongoose.connection.db.dropCollection(`ChattyDB-${room_name}`, (err, result) => {
+    mongoose.connection.db.dropCollection(`${process.env.COLLECTION_PREFIX}-${room_name}`, (err, result) => {
         if (err) throw err
         console.log(result)
     })
