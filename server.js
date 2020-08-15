@@ -34,6 +34,13 @@ const createModel = (room_name) => {
     return new mongoose.model(`storage_${room_name}`, schema)
 }
 
+const deleteCollection = (room_name) => {
+    mongoose.connection.db.dropCollection(`ChattyDB-${room_name}`, (err, result) => {
+        if (err) throw err
+        console.log(result)
+    })
+}
+
 // create storage for general because it is default room
 rooms.set('general', createModel('general'))
 
@@ -130,11 +137,3 @@ io.on('connection', socket => {
 const PORT = process.env.PORT || 3000
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
-
-/**
- * Plan:
- * 
- * Use store.js to store messages in each room
- * Each room will remain for 15 minutes since last active message
- * Each room will store 250 messages
- */
