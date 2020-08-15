@@ -83,8 +83,20 @@ input:focus {
     background-color: var(--color3);
 }
 
-#name-input, #submit-button {
+#identifier>h2 {
+    margin: 0;
+}
+
+#name-input, #submit-button, #name-message {
     width: 40%
+}
+
+#name-message {
+    height: 25px;
+    font-family: var(--header-font);
+    color: var(--color4);
+    margin: 10px;
+    text-align: center;
 }
 
 #name-input {
@@ -152,7 +164,7 @@ input:focus {
     width: 20%; 
     min-width: 20%;
     max-width: 20%;
-    background-color: var(--color1);
+    background-color: var(--color2);
 }
 
 #rooms>h2 {
@@ -191,7 +203,7 @@ input:focus {
     padding: 0;
     display: flex;
     flex-direction: column;
-    background-color: var(--color2);
+    background-color: var(--color1);
 }
 
 #formatter {
