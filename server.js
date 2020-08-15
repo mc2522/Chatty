@@ -5,6 +5,9 @@ const please = require('pleasejs')
 const express = require('express')
 const socketio = require('socket.io')
 
+// DB storage
+const { createModel, deleteCollection, randomColorPicker } = require('./util')
+
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
@@ -18,43 +21,10 @@ const sockets = new Map()
 // Stores all rooms and their respective storages
 const rooms = new Map()
 
-// MongoDB setup
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@data-stno8.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-
-// MongoDB
-const createModel = (room_name) => {
-    const schema = new mongoose.Schema({
-        name: String,
-        message: String
-    }, { collection: `${process.env.COLLECTION_PREFIX}-${room_name}`, size: 250 }) // find workaround for max size such as removing the oldest item and appending new item
-
-    return new mongoose.model(`storage_${room_name}`, schema)
-}
-
-const deleteCollection = (room_name) => {
-    mongoose.connection.db.dropCollection(`${process.env.COLLECTION_PREFIX}-${room_name}`, (err, result) => {
-        if (err) throw err
-        console.log(result)
-    })
-}
-
 // create storage for general because it is default room
-rooms.set('general', createModel('general'))
+rooms.set('general', { DB: createModel('general'), last_added: null } )
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Chooses a random color for each user to be displayed when chatting
-const randomColorPicker = () => {
-    return please.make_color({
-        saturation: 1,
-        value: 1,
-        golden: false,
-        format: 'hex'
-    })
-}
 
 io.on('connection', socket => {
     // upon connection, join general room at default
@@ -70,17 +40,20 @@ io.on('connection', socket => {
             // store message
             let selected_room = rooms.get(message.room_name)
             if (selected_room != undefined) {
-                selected_room({
+                selected_room.last_added = Date.now()
+                selected_room.DB({
                     name: socketProps.name,
                     message: message.content
-                    // set up time so we can delete extra rooms after ten minutes
                 }).save((err, data) => {
                     if (err) throw err
                     console.log(data)
                 })
+                /**
+                 * TODO: DECIDE IF DELETE WILL BE BASED ON LAST ADDED MESSAGE TIME ON MESSAGE BASE OR ROOM BASE
+                 */
             } else {
-                rooms.set(message.room_name, createModel(message.room_name))
-                rooms.get(message.room_name)({
+                rooms.set(message.room_name, { DB: createModel(message.room_name), last_added: Date.now() })
+                rooms.get(message.room_name).DB({
                     name: socketProps.name,
                     message: message.content
                 }).save((err, data) => {
