@@ -1,6 +1,6 @@
 const http = require('http')
 const path = require('path')
-const store = require('store')
+const mongoose = require('mongoose')
 const please = require('pleasejs')
 const express = require('express')
 const socketio = require('socket.io')
@@ -10,6 +10,20 @@ const server = http.createServer(app)
 const io = socketio(server)
 
 require('dotenv').config()
+
+// MongoDB setup
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@data-stno8.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+
+const schema = new mongoose.Schema({
+    room: String,
+    name: String,
+    message: String
+}, { collection: 'chattyDB' })
+
+const messageDB = new mongoose.model('messageDB', schema)
 
 // Stores all in-use names
 const names = new Set()
@@ -29,6 +43,7 @@ const randomColorPicker = () => {
 }
 
 io.on('connection', socket => {
+    socket.join('general')
     sockets.set(socket, null)
     // TEST console.log(sockets.size)
     // send number of users data to newly connected socket
@@ -37,6 +52,14 @@ io.on('connection', socket => {
     socket.on('message', message => {
         let socketProps = sockets.get(socket)
         if (socketProps != null && socketProps.name != null) {
+            messageDB({
+                room: 'general',
+                name: socketProps.name,
+                message: message
+            }).save((err, data) => {
+                if (err) throw err
+                console.log(data)
+            })
             io.emit('message', {
                 'name': socketProps.name,
                 'color': socketProps.color,
