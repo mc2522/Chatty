@@ -1,7 +1,5 @@
 const http = require('http')
 const path = require('path')
-const mongoose = require('mongoose')
-const please = require('pleasejs')
 const express = require('express')
 const socketio = require('socket.io')
 
