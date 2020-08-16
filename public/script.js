@@ -45,7 +45,7 @@ socket.on('message', message => {
 
 // Receiving old messages from DB
 socket.on('history', messages => {
-
+    console.log(messages)
 })
 
 // Update number of users online TO BE IMPLEMENTED

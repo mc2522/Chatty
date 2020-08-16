@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { createModel, randomColorPicker, saveMessage } = require('./util')
+const { createModel, randomColorPicker, saveMessage, getMessages } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -59,10 +59,15 @@ io.on('connection', socket => {
             sockets.set(socket, {
                 'name': name,
                 'color': color,
-                'room': prev_room
+                'room': room_name
             })
-            socket.leave(prev_room)
-            socket.join(room_name)
+            // if the room is different then change
+            if (room_name != prev_room) {
+                socket.leave(prev_room)
+                socket.join(room_name)
+            }
+            // send a backlog of messages
+            socket.emit('history', getMessages(room_name))
         // something is wrong, reload
         } else {
             socket.emit('reload', true)

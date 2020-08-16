@@ -12,7 +12,7 @@ const createModel = room_name => {
         name: String,
         message: String,
         time: Number
-    }, { collection: room_name, size: 250 }) 
+    }, { collection: room_name, size: 5000 }) 
     rooms.set(room_name, new mongoose.model(room_name, schema))
 }
 
@@ -33,9 +33,15 @@ const clearCollection = model => {
 
 // Gets all messages in the room
 const getMessages = room_name => {
-    return rooms.get(room_name).find({}, err => {
-        if (err) console.error(err)
-    })
+    let selected_room = rooms.get(room_name)
+    if (selected_room != undefined) {
+        selected_room.find({}).then(results => {
+            return results
+        }).catch(err => {
+            console.error(err)
+        })
+    }
+    return []
 }
 
 // Save message in the correct collection
@@ -106,7 +112,7 @@ mongoose.connection.on('open', () => {
 
 module.exports = {
     createModel,
-    deleteCollection,
+    getMessages,
     randomColorPicker,
     saveMessage
 }
