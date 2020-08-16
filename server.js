@@ -25,7 +25,11 @@ createModel('general')
 io.on('connection', socket => {
     // upon connection, join general room at default
     socket.join('general')
-    sockets.set(socket, null)
+    sockets.set(socket, {
+        'name': null,
+        'color': null,
+        'room': 'general'
+    })
     // send number of users data to newly connected socket
     io.emit('numberUsers', sockets.size)
     // send message to all sockets
@@ -54,7 +58,7 @@ io.on('connection', socket => {
                 })
             }
             // send message to all sockets TODO rooms
-            io.emit('message', {
+            io.to(message.room_name).emit('message', {
                 'name': socketProps.name,
                 'color': socketProps.color,
                 'content': message.content
@@ -63,7 +67,27 @@ io.on('connection', socket => {
             io.emit('reload', true)
         }
     })
-    // check if name exists already, then add as appropriate
+    // On change to another room, send backlog of messages
+    socket.on('change', room_name => {
+        let val = sockets.get(socket)
+        if (val != null && val.room != null) {
+            let prev_room = val.room
+            let name = val.name
+            let color = val.color
+            sockets.delete(socket)
+            sockets.set(socket, {
+                'name': name,
+                'color': color,
+                'room': prev_room
+            })
+            socket.leave(prev_room)
+            socket.join(room_name)
+        // room shouldn't be null
+        } else {
+            window.location.replace('/')
+        }
+    }) 
+    // Check if name exists already, then add as appropriate
     socket.on('name', name => {
         if (names.has(name)) {
             // notify socket that username is unavailable
@@ -74,7 +98,8 @@ io.on('connection', socket => {
             sockets.delete(socket)
             sockets.set(socket, {
                 'name': name,
-                'color': randomColorPicker()
+                'color': randomColorPicker(),
+                'room': 'general'
             })
             // notify socket that username is available
             socket.emit('user', true)
