@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { getRoomModel, createModel, randomColorPicker } = require('./util')
+const { createModel, randomColorPicker, saveMessage } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -32,31 +32,11 @@ io.on('connection', socket => {
     })
     // send number of users data to newly connected socket
     io.emit('numberUsers', sockets.size)
-    // send message to all sockets
+    // send message to all appropriate sockets through rooms
     socket.on('message', message => {
         let socketProps = sockets.get(socket)
         if (socketProps != null && socketProps.name != null) {
-            // store message
-            let selected_room = getRoomModel(message.room_name)
-            if (selected_room != undefined) {
-                selected_room({
-                    name: socketProps.name,
-                    message: message.content,
-                    time: Date.now()
-                }).save(err => {
-                    if (err) console.error(err)
-                })
-            } else {
-                // create room storage and save message
-                createModel(message.room_name)
-                getRoomModel(message.room_name)({
-                    name: socketProps.name,
-                    message: message.content,
-                    time: Date.now()
-                }).save(err => {
-                    if (err) console.error(err)
-                })
-            }
+            saveMessage(message.room_name, socketProps.name, message.content)
             // send message to all sockets TODO rooms
             io.to(message.room_name).emit('message', {
                 'name': socketProps.name,
@@ -64,13 +44,14 @@ io.on('connection', socket => {
                 'content': message.content
             })
         } else {
-            io.emit('reload', true)
+            socket.emit('reload', true)
         }
     })
     // On change to another room, send backlog of messages
     socket.on('change', room_name => {
         let val = sockets.get(socket)
-        if (val != null && val.room != null) {
+        // check if this user is already identified before proceeding
+        if (val != null && val.name != null && val.color != null && val.room != null) {
             let prev_room = val.room
             let name = val.name
             let color = val.color
@@ -82,9 +63,9 @@ io.on('connection', socket => {
             })
             socket.leave(prev_room)
             socket.join(room_name)
-        // room shouldn't be null
+        // something is wrong, reload
         } else {
-            window.location.replace('/')
+            socket.emit('reload', true)
         }
     }) 
     // Check if name exists already, then add as appropriate
@@ -94,7 +75,7 @@ io.on('connection', socket => {
             socket.emit('user', false)
         } else {
             names.add(name)
-            // replace pairs
+            // replace value
             sockets.delete(socket)
             sockets.set(socket, {
                 'name': name,
