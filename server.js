@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { createModel, deleteCollection, randomColorPicker } = require('./util')
+const { getRoomModel, createModel, randomColorPicker } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -12,23 +12,20 @@ const io = socketio(server)
 
 require('dotenv').config()
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Stores all in-use names
 const names = new Set()
 // Stores all sockets
 const sockets = new Map()
-// Stores all rooms and their respective storages
-const rooms = new Map()
 
 // create storage for general because it is default room
-rooms.set('general', { DB: createModel('general'), last_added: null } )
-
-app.use(express.static(path.join(__dirname, 'public')));
+createModel('general')
 
 io.on('connection', socket => {
     // upon connection, join general room at default
     socket.join('general')
     sockets.set(socket, null)
-    // TEST console.log(sockets.size)
     // send number of users data to newly connected socket
     io.emit('numberUsers', sockets.size)
     // send message to all sockets
@@ -36,30 +33,27 @@ io.on('connection', socket => {
         let socketProps = sockets.get(socket)
         if (socketProps != null && socketProps.name != null) {
             // store message
-            let selected_room = rooms.get(message.room_name)
+            let selected_room = getRoomModel(message.room_name)
             if (selected_room != undefined) {
-                selected_room.last_added = Date.now()
-                selected_room.DB({
+                selected_room({
                     name: socketProps.name,
-                    message: message.content
-                }).save((err, data) => {
-                    if (err) throw err
-                    console.log(data)
+                    message: message.content,
+                    time: Date.now()
+                }).save(err => {
+                    if (err) console.error(err)
                 })
-                /**
-                 * TODO: DECIDE IF DELETE WILL BE BASED ON LAST ADDED MESSAGE TIME ON MESSAGE BASE OR ROOM BASE
-                 */
             } else {
-                rooms.set(message.room_name, { DB: createModel(message.room_name), last_added: Date.now() })
-                rooms.get(message.room_name).DB({
+                // create room storage and save message
+                createModel(message.room_name)
+                getRoomModel(message.room_name)({
                     name: socketProps.name,
-                    message: message.content
-                }).save((err, data) => {
-                    if (err) throw err
-                    console.log(data)
+                    message: message.content,
+                    time: Date.now()
+                }).save(err => {
+                    if (err) console.error(err)
                 })
             }
-
+            // send message to all sockets TODO rooms
             io.emit('message', {
                 'name': socketProps.name,
                 'color': socketProps.color,
@@ -86,8 +80,6 @@ io.on('connection', socket => {
             socket.emit('user', true)
             // if users' size increases, send new number of users to all sockets
             io.emit('numberUsers', sockets.size)
-            // TEST console.log(sockets.size)
-            // TEST console.log(names)
         }
     })
     // on disconnect, remove the socket and name
@@ -100,8 +92,6 @@ io.on('connection', socket => {
         sockets.delete(socket)
         // if users' size decreases, send new number of users to all sockets
         io.emit('numberUsers', sockets.size)
-        // TEST console.log(sockets.size)
-        // TEST console.log(names)
     })
 })
 

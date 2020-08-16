@@ -18,16 +18,22 @@
         <div id="container">
             <div id="container-top">
                 <h1>Chatty</h1>
+                <div id="online-formatter">
+                    <h3 id="online-counter"></h3>
+                </div>
             </div>
             <div id="container-center">
                 <div id="rooms">
                     <h2>Rooms</h2>
                     <div id="rooms_list">
-                        <button id="general" class="room_button" >General</button>
+                        <button id="general" class="room_button">General</button>
                     </div>
+                    <button id="add-room" class="room_button">Add Room</button>
                 </div>
                 <div id="chat">
-                    <h2 id="room_name">General</h2>
+                    <div id="room_name_background">
+                        <h2 id="room_name">General</h2>
+                    </div>
                     <div id="formatter">
                         <div id="text"></div>
                         <input type="text" id="message-box" autocomplete="off" />
