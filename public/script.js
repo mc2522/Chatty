@@ -45,7 +45,31 @@ socket.on('message', message => {
 
 // Receiving old messages from DB
 socket.on('history', messages => {
-    console.log(messages)
+    Array.from(messages).forEach(message => {
+        let username = document.createElement('SMALL')
+        username.classList.add('text-name')
+        let content = document.createElement('SMALL')
+        content.classList.add('text-message')
+        let br = document.createElement('BR')
+        // class added for transition effect
+        username.classList.add('hide')
+        content.classList.add('hide')
+        // set text and styling
+        username.innerText = message.name
+        username.style.color = '#5c6778'
+        content.innerText = message.message
+        // add elements to text div
+        text.appendChild(username)
+        text.appendChild(content)
+        text.appendChild(br)
+        // transition to opacity: 1
+        setTimeout(() => {
+            username.classList.remove('hide')
+            content.classList.remove('hide')
+        }, 80)
+    })
+    // auto scroll to bottom
+    text.scrollTop = text.scrollHeight
 })
 
 // Update number of users online TO BE IMPLEMENTED

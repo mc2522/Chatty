@@ -67,7 +67,8 @@ io.on('connection', socket => {
                 socket.join(room_name)
             }
             // send a backlog of messages
-            socket.emit('history', getMessages(room_name))
+            getMessages(room_name, socket)
+            //socket.emit('history', getMessages(room_name))
         // something is wrong, reload
         } else {
             socket.emit('reload', true)

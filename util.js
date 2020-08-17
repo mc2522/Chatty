@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const please = require('pleasejs')
+const socket = require('socket.io')
 
 require('dotenv').config()
 
@@ -32,16 +33,14 @@ const clearCollection = model => {
 }
 
 // Gets all messages in the room
-const getMessages = room_name => {
+const getMessages = (room_name, socket) => {
     let selected_room = rooms.get(room_name)
     if (selected_room != undefined) {
-        selected_room.find({}).then(results => {
-            return results
-        }).catch(err => {
-            console.error(err)
+        // find messages and emit to socket requesting it
+        selected_room.find({}).then(result => {
+            socket.emit('history', result)
         })
     }
-    return []
 }
 
 // Save message in the correct collection
