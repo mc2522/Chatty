@@ -40,6 +40,8 @@ const getMessages = (room_name, socket) => {
         selected_room.find({}).then(result => {
             socket.emit('history', result)
         })
+    } else {
+        socket.emit('history', null )
     }
 }
 

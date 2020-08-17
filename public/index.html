@@ -23,20 +23,26 @@
                 </div>
             </div>
             <div id="container-center">
+                <!--<div id="loading">
+                    <div id="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                </div>-->
                 <div id="rooms">
                     <h2>Rooms</h2>
                     <div id="rooms_list">
+                        <div id="room_loading" class="loading">
+                            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        </div>
                         <button id="general" class="room_button">General</button>
+                        <button id="add-room" class="room_button">Add Room</button>
                     </div>
-                    <button id="add-room" class="room_button">Add Room</button>
                 </div>
                 <div id="chat">
                     <div id="room_name_background">
                         <h2 id="room_name">General</h2>
                     </div>
                     <div id="formatter">
-                        <div id="loading">
-                            <div id="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        <div id="chat_loading" class="loading">
+                            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                         </div>
                         <div id="text"></div>
                         <input type="text" id="message-box" autocomplete="off" />

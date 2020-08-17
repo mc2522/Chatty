@@ -10,11 +10,36 @@ const text = document.getElementById('text')
 const room_name = document.getElementById('room_name')
 const rooms = document.getElementsByClassName('room_button')
 const smalls = document.getElementsByTagName('small')
-const loading = document.getElementById('loading')
-const loader = document.getElementById('lds-ellipsis')
+const loading = document.getElementsByClassName('loading')
+//const loading = document.getElementById('loading')
+const loader = document.getElementsByClassName('lds-ellipsis')
+//const loader = document.getElementById('lds-ellipsis')
 
 let name = ''
 let selected_room = 'general'
+
+// Stop loading in chat
+const stopLoading = () => {
+    setTimeout(() => {
+        Array.from(loading).forEach(element => {
+            element.classList.remove('show')
+        })
+    }, 500)
+    setTimeout(() => {
+        Array.from(loading).forEach(element => {
+            element.style.visibility = 'hidden'
+        })
+        //loading.style.visibility = 'hidden'
+        Array.from(loader).forEach(element => {
+            element.childNodes.forEach(child => {
+                child.style.animationPlayState = 'paused'
+            })
+        })
+        /*loader.childNodes.forEach(child => {
+            child.style.animationPlayState = 'paused'
+        })*/
+    }, 1000)
+}
 
 // When a message is received from server.js, display it in text 
 socket.on('message', message => {
@@ -45,31 +70,33 @@ socket.on('message', message => {
 
 // Receiving old messages from DB
 socket.on('history', messages => {
-    Array.from(messages).forEach(message => {
-        let username = document.createElement('SMALL')
-        username.classList.add('text-name')
-        let content = document.createElement('SMALL')
-        content.classList.add('text-message')
-        let br = document.createElement('BR')
-        // class added for transition effect
-        username.classList.add('hide')
-        content.classList.add('hide')
-        // set text and styling
-        username.innerText = message.name
-        username.style.color = '#5c6778'
-        content.innerText = message.message
-        // add elements to text div
-        text.appendChild(username)
-        text.appendChild(content)
-        text.appendChild(br)
-        // transition to opacity: 1
+    if (messages == null) {
         setTimeout(() => {
-            username.classList.remove('hide')
-            content.classList.remove('hide')
-        }, 80)
-    })
-    // auto scroll to bottom
-    text.scrollTop = text.scrollHeight
+            stopLoading()
+        }, 300)
+    } else {
+        setTimeout(() => {
+            Array.from(messages).forEach(message => {
+                let username = document.createElement('SMALL')
+                username.classList.add('text-name')
+                let content = document.createElement('SMALL')
+                content.classList.add('text-message')
+                let br = document.createElement('BR')
+                // set text and styling
+                username.innerText = message.name
+                username.style.color = '#5c6778'
+                content.innerText = message.message
+                // add elements to text div
+                text.appendChild(username)
+                text.appendChild(content)
+                text.appendChild(br)
+            })
+            // once messages are loaded, stop loading
+            stopLoading()
+        }, 555)
+        // auto scroll to bottom
+        text.scrollTop = text.scrollHeight
+    }
 })
 
 // Update number of users online TO BE IMPLEMENTED
@@ -157,24 +184,20 @@ Array.from(rooms).forEach(button => {
         socket.emit('change', button.id)
         selected_room = button.id
         // delete all children of text to delete messages since changing rooms
-        while (text.lastElementChild)
-            text.removeChild(text.lastElementChild)
+        setTimeout(() => {
+            while (text.lastElementChild)
+                text.removeChild(text.lastElementChild)
+        }, 550)
         // transition start for text
-        loading.style.visibility = 'visible'
-        loading.classList.add('show')
-        loader.childNodes.forEach(child => {
-            child.style.animationPlayState = 'running'
+        Array.from(loading).forEach(element => {
+            element.style.visibility = 'visible'
+            element.classList.add('show')
         })
-        setTimeout(() => {
-            loading.classList.remove('show')
-        }, 500)
-        setTimeout(() => {
-            loading.style.visibility = 'hidden'
-            loader.childNodes.forEach(child => {
-                child.style.animationPlayState = 'paused'
+        Array.from(loader).forEach(element => {
+            element.childNodes.forEach(child => {
+                child.style.animationPlayState = 'running'
             })
-        }, 1000)
-        // transition end for text
+        })
         // transition start for room name
         room_name.classList.add('hide')
         setTimeout(() => {

@@ -184,12 +184,17 @@ input:focus {
     margin: 0 0 10px 0;
 }
 
+#rooms_list {
+    position: relative;
+    height: 90%;
+}
+
 .room_button {
     border: 2px solid var(--heavy-purple);
     background-color: var(--color5);
     color: var(--heavy-purple);
     border-radius: 25px;
-    margin: 2px;
+    margin: 2px 0;
     width: 100%;
     height: 4vh;
     font-family: var(--text-font);
@@ -220,7 +225,17 @@ input:focus {
     opacity: 0;
 }
 
-#chat, #loading {
+#room_loading {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color2);
+}
+#chat_loading {
+    width: calc(100% - 20px);
+    height: calc(100% - 10px);
+}
+
+#chat, #chat_loading {
     background-color: var(--color1);
 }
 
@@ -232,7 +247,7 @@ input:focus {
     flex-direction: column;
 }
 
-#loading, #formatter, #text {
+.loading, #formatter, #text {
     box-sizing: border-box;
 }
 
@@ -243,30 +258,29 @@ input:focus {
     padding: 0 10px 10px 10px;
 }
 
-#loading {
+.loading {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.5s;
     position: absolute;
-    width: calc(100% - 20px);
-    height: calc(100% - 10px);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 8000;
 }
 
-#loading.show {
+.loading.show {
     opacity: 1;
 }
 
 /* loader */
-#lds-ellipsis {
+.lds-ellipsis {
     display: inline-block;
     position: relative;
     width: 80px;
     height: 80px;
 }
-#lds-ellipsis div {
+.lds-ellipsis div {
     position: absolute;
     top: 33px;
     width: 13px;
@@ -275,22 +289,22 @@ input:focus {
     background: var(--color5);
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
-#lds-ellipsis div:nth-child(1) {
+.lds-ellipsis div:nth-child(1) {
     left: 8px;
     animation: lds-ellipsis1 0.6s infinite;
     animation-play-state: paused;
 }
-#lds-ellipsis div:nth-child(2) {
+.lds-ellipsis div:nth-child(2) {
     left: 8px;
     animation: lds-ellipsis2 0.6s infinite;
     animation-play-state: paused;
 }
-#lds-ellipsis div:nth-child(3) {
+.lds-ellipsis div:nth-child(3) {
     left: 32px;
     animation: lds-ellipsis2 0.6s infinite;
     animation-play-state: paused;
 }
-#lds-ellipsis div:nth-child(4) {
+.lds-ellipsis div:nth-child(4) {
     left: 56px;
     animation: lds-ellipsis3 0.6s infinite;
     animation-play-state: paused;
