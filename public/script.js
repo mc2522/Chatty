@@ -29,15 +29,11 @@ const stopLoading = () => {
         Array.from(loading).forEach(element => {
             element.style.visibility = 'hidden'
         })
-        //loading.style.visibility = 'hidden'
         Array.from(loader).forEach(element => {
             element.childNodes.forEach(child => {
                 child.style.animationPlayState = 'paused'
             })
         })
-        /*loader.childNodes.forEach(child => {
-            child.style.animationPlayState = 'paused'
-        })*/
     }, 1000)
 }
 
@@ -94,9 +90,9 @@ socket.on('history', messages => {
             // once messages are loaded, stop loading
             stopLoading()
         }, 555)
-        // auto scroll to bottom
-        text.scrollTop = text.scrollHeight
     }
+    // auto scroll to bottom
+    text.scrollTop = text.scrollHeight
 })
 
 // Update number of users online TO BE IMPLEMENTED

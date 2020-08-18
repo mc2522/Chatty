@@ -25,6 +25,8 @@ createModel('general')
 io.on('connection', socket => {
     // upon connection, join general room at default
     socket.join('general')
+    // send all messages
+    getMessages('general', socket)
     sockets.set(socket, {
         'name': null,
         'color': null,
@@ -68,7 +70,6 @@ io.on('connection', socket => {
             }
             // send a backlog of messages
             getMessages(room_name, socket)
-            //socket.emit('history', getMessages(room_name))
         // something is wrong, reload
         } else {
             socket.emit('reload', true)

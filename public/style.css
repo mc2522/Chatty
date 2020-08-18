@@ -366,3 +366,11 @@ input:focus {
     display: flex;
     align-items: center;
 }
+
+#add-room-div {
+    position: absolute;
+    width: 50%;
+    height: 70%;
+    z-index: 6000;
+    background-color: var(--color4);
+}
