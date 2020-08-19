@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { createModel, randomColorPicker, saveMessage, getMessages } = require('./util')
+const { createModel, randomColorPicker, saveMessage, getMessages, createRoom } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -75,6 +75,10 @@ io.on('connection', socket => {
             socket.emit('reload', true)
         }
     }) 
+    // Create room if name has not been taken
+    socket.on('create-room', room_name => {
+        createRoom(room_name, socket, io)
+    })
     // Check if name exists already, then add as appropriate
     socket.on('name', name => {
         if (names.has(name)) {

@@ -1,5 +1,6 @@
 const socket = io()
 
+const container = document.getElementById('container')
 const name_input = document.getElementById('name-input')
 const submit_button = document.getElementById('submit-button')
 const identifier = document.getElementById('identifier')
@@ -7,16 +8,55 @@ const name_message = document.getElementById('name-message')
 const online_counter = document.getElementById('online-counter')
 const message_box = document.getElementById('message-box') 
 const text = document.getElementById('text')
+const rooms_container = document.getElementById('rooms_container')
 const room_name = document.getElementById('room_name')
 const rooms = document.getElementsByClassName('room_button')
 const smalls = document.getElementsByTagName('small')
+const room_loading = document.getElementById('room_loading')
+const room_loader = document.getElementById('room-lds-ellipsis')
 const loading = document.getElementsByClassName('loading')
-//const loading = document.getElementById('loading')
+const add_room_button = document.getElementById('add-room')
+const add_room_div = document.getElementById('add-room-div')
+const room_input = document.getElementById('room-input')
+const room_message = document.getElementById('room-message')
+const room_submit_buttom = document.getElementById('room-submit-button')
 const loader = document.getElementsByClassName('lds-ellipsis')
-//const loader = document.getElementById('lds-ellipsis')
+const cancel_room_button = document.getElementById('cancel-room-button')
 
 let name = ''
 let selected_room = 'general'
+
+const addButtonEventListener = button => {
+    button.addEventListener('click', e => {
+        e.preventDefault()
+        socket.emit('change', button.id)
+        selected_room = button.id
+        // delete all children of text to delete messages since changing rooms
+        setTimeout(() => {
+            while (text.lastElementChild)
+                text.removeChild(text.lastElementChild)
+        }, 550)
+        // transition start for text
+        Array.from(loading).forEach(element => {
+            element.style.visibility = 'visible'
+            element.classList.add('show')
+        })
+        Array.from(loader).forEach(element => {
+            element.childNodes.forEach(child => {
+                child.style.animationPlayState = 'running'
+            })
+        })
+        // transition start for room name
+        room_name.classList.add('hide')
+        setTimeout(() => {
+            room_name.innerText = button.innerText
+        }, 250)
+        setTimeout(() => {
+            room_name.classList.remove('hide')
+        }, 250)
+        // transition end for room name
+    })
+}
 
 // Stop loading in chat
 const stopLoading = () => {
@@ -64,6 +104,34 @@ socket.on('message', message => {
     text.scrollTop = text.scrollHeight
 })
 
+socket.on('add-room', room_name => {
+    // loading start
+    room_loading.style.visibility = 'visible'
+    room_loading.classList.add('show')
+    room_loader.childNodes.forEach(child => {
+        child.style.animationPlayState = 'running'
+    })
+    // add buttons
+    setTimeout(() => {
+        const btn = document.createElement('button')
+        btn.innerText = room_name
+        btn.classList.add('room_button')
+        btn.id = room_name
+        addButtonEventListener(btn)
+        rooms_container.appendChild(btn)
+    }, 550)
+    // loading end
+    setTimeout(() => {
+        room_loading.classList.remove('show')
+    }, 700)
+    setTimeout(() => {
+        room_loading.style.visibility = 'hidden'
+        room_loader.childNodes.forEach(child => {
+            child.style.animationPlayState = 'paused'
+        })
+    }, 1200)
+})
+
 // Receiving old messages from DB
 socket.on('history', messages => {
     if (messages == null) {
@@ -86,13 +154,13 @@ socket.on('history', messages => {
                 text.appendChild(username)
                 text.appendChild(content)
                 text.appendChild(br)
+                // auto scroll to bottom
+                text.scrollTop = text.scrollHeight
             })
             // once messages are loaded, stop loading
             stopLoading()
         }, 555)
     }
-    // auto scroll to bottom
-    text.scrollTop = text.scrollHeight
 })
 
 // Update number of users online TO BE IMPLEMENTED
@@ -122,6 +190,19 @@ socket.on('user', valid => {
 socket.on('reload', reload => {
     if (reload) {
         window.location.replace('/')
+    }
+})
+
+socket.on('create-room', valid => {
+    if (valid) {
+        room_message.innerText = ""
+        add_room_div.classList.remove('reveal')
+        container.classList.remove('background')
+        setTimeout(() => {
+            add_room_div.style.visibility = 'hidden';
+        }, 500)
+    } else {
+        room_message.innerText = "Room name has been taken already, select another room name."
     }
 })
 
@@ -173,35 +254,37 @@ message_box.addEventListener('keypress', e => {
     }
 })
 
+// Add event listener to add room button
+add_room_button.addEventListener('click', e => {
+    container.classList.add('background')
+    add_room_div.style.visibility = 'visible';
+    add_room_div.classList.add('reveal')
+})
+
+// Add event listener to submit button for adding room
+room_submit_buttom.addEventListener('click', e => {
+    let check = room_input.value.trim()
+    if (check.length > 10) {
+        room_message.innerText = 'Room name exceeds max characters (10).'
+    // check if only white space
+    } else if ((/\S/gm).test(check)) {
+        socket.emit('create-room', check)
+    } else {
+        room_message.innerText = 'Room name needs to have at least one character.'
+    }
+})
+
+// Add event lister to cancel room button
+cancel_room_button.addEventListener('click', e => {
+    add_room_div.classList.remove('reveal')
+    container.classList.remove('background')
+    setTimeout(() => {
+        add_room_div.style.visibility = 'hidden';
+    }, 500)
+    room_message.innerText = ""
+})
+
 // Add event listener to room buttons
 Array.from(rooms).forEach(button => {
-    button.addEventListener('click', e => {
-        e.preventDefault()
-        socket.emit('change', button.id)
-        selected_room = button.id
-        // delete all children of text to delete messages since changing rooms
-        setTimeout(() => {
-            while (text.lastElementChild)
-                text.removeChild(text.lastElementChild)
-        }, 550)
-        // transition start for text
-        Array.from(loading).forEach(element => {
-            element.style.visibility = 'visible'
-            element.classList.add('show')
-        })
-        Array.from(loader).forEach(element => {
-            element.childNodes.forEach(child => {
-                child.style.animationPlayState = 'running'
-            })
-        })
-        // transition start for room name
-        room_name.classList.add('hide')
-        setTimeout(() => {
-            room_name.innerText = button.innerText
-        }, 250)
-        setTimeout(() => {
-            room_name.classList.remove('hide')
-        }, 250)
-        // transition end for room name
-    })
+    addButtonEventListener(button)
 })

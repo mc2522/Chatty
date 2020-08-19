@@ -35,7 +35,7 @@ const clearCollection = model => {
 // Gets all messages in the room
 const getMessages = (room_name, socket) => {
     let selected_room = rooms.get(room_name)
-    if (selected_room != undefined) {
+    if (selected_room != null) {
         // find messages and emit to socket requesting it
         selected_room.find({}).then(result => {
             socket.emit('history', result)
@@ -66,6 +66,19 @@ const saveMessage = (room_name, name, message) => {
         }).save(err => {
             if (err) console.error(err)
         })
+    }
+}
+
+// Create room if the room name has not been used
+const createRoom = (room_name, socket, io) => {
+    if (rooms.has(room_name)) {
+        socket.emit('create-room', false)
+    } else {
+        rooms.set(room_name, null)
+        socket.emit('create-room', true)
+        setTimeout(() => {
+            io.emit('add-room', room_name)
+        }, 300)
     }
 }
 
@@ -104,9 +117,13 @@ mongoose.connection.on('open', () => {
     // Every minute, delete old messages in DB for every model/room
     setInterval(() => {
         for (let model of rooms.values()) {
-            model.deleteMany({ time: { $lte: (Date.now() - 1200000) } }, err => {
-                if (err) console.error(err)
-            })
+            // model might be null if no messages has been sent in the room
+            if (model != null) {
+                // if message is at least 20 minutes old, delete the message
+                model.deleteMany({ time: { $lte: (Date.now() - 1200000) } }, err => {
+                    if (err) console.error(err)
+                })
+            }
         }
     }, 60000)
 })
@@ -115,5 +132,6 @@ module.exports = {
     createModel,
     getMessages,
     randomColorPicker,
-    saveMessage
+    saveMessage,
+    createRoom
 }

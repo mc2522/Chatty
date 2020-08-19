@@ -140,6 +140,13 @@ input:focus {
     justify-content: center;
     background-color: var(--color4);
     border-radius: 15px;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+#container.background {
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 #container-top, #container-bottom, #container-center {
@@ -194,11 +201,13 @@ input:focus {
     background-color: var(--color5);
     color: var(--heavy-purple);
     border-radius: 25px;
-    margin: 2px 0;
+    margin: 2px 0 4px 0;
     width: 100%;
     height: 4vh;
     font-family: var(--text-font);
     font-size: 1em;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .room_button:hover, .room_button:active, .room_button:focus {
@@ -367,10 +376,96 @@ input:focus {
     align-items: center;
 }
 
+#rooms_container {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+#add_room_container {
+    height: 10%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#add-room {
+    width: 100%;
+    height: 100%;
+    color: var(--color5);
+    background-color: var(--color4);
+    font-family: var(--header-font);
+    font-weight: bold;
+    font-size: 1.1em;
+    border-radius: 25px;
+    border: none;
+}
+
+#add-room:active, #add-room:focus {
+    outline: none;
+}
+
 #add-room-div {
     position: absolute;
     width: 50%;
-    height: 70%;
-    z-index: 6000;
+    height: 50%;
+    z-index: 8001;
     background-color: var(--color4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    visibility: hidden;
+}
+
+#add-room-div>h2 {
+    margin-bottom: 10px;
+}
+
+#add-room-div.reveal {
+    opacity: 1;
+}
+
+#room-message {
+    height: 8%;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+    color: var(--color5);
+    font-family: var(--header-font);
+}
+
+.add-room-div-element {
+    width: 70%;
+    height: 10%;
+    border-radius: 25px;
+    font-family: var(--text-font);
+}
+
+#room-input {
+    text-align: center;
+}
+
+#room-submit-button, #cancel-room-button {
+    border: none;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#room-submit-button:active, #room-submit-button:focus, #cancel-room-button:active, #cancel-room-button:focus {
+    outline: none;
+} 
+
+#room-submit-button {
+    background-color: var(--color5);
+    color: var(--color4);
+}
+
+#cancel-room-button {
+    background-color: var(--color1);
+    color: var(--color5);
 }

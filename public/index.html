@@ -18,8 +18,9 @@
         <div id="add-room-div">
             <h2>Enter your room name:</h2>
             <p id="room-message"></p>
-            <input type="text" id="room-input" autocomplete="off"/>
-            <button type="submit" id="room-submit-button">Use this name</button>
+            <input type="text" id="room-input" class="add-room-div-element" autocomplete="off"/>
+            <button type="submit" id="room-submit-button" class="add-room-div-element">Use this name</button>
+            <button type="submit" id="cancel-room-button" class="add-room-div-element">Cancel</button>
         </div>
         <div id="container">
             <div id="container-top">
@@ -29,17 +30,19 @@
                 </div>
             </div>
             <div id="container-center">
-                <!--<div id="loading">
-                    <div id="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                </div>-->
                 <div id="rooms">
                     <h2>Rooms</h2>
                     <div id="rooms_list">
                         <div id="room_loading" class="loading">
-                            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                            <div id="room-lds-ellipsis" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                         </div>
-                        <button id="general" class="room_button">General</button>
-                        <button id="add-room" class="room_button">Add Room</button>
+                        <div id="rooms_container">
+                            <button id="general" class="room_button">General</button>
+                            <button id="room1" class="room_button">Room1</button>
+                        </div>
+                        <div id="add_room_container">
+                            <button id="add-room">Add Room</button>
+                        </div>
                     </div>
                 </div>
                 <div id="chat">
