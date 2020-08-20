@@ -210,9 +210,12 @@ input:focus {
     overflow: hidden;
 }
 
-.room_button:hover, .room_button:active, .room_button:focus {
-    background-color: var(--heavy-purple);
-    color: var(--ice-cold);
+.room_button:hover {
+    background-color: var(--color3);
+    color: var(--color5);
+}
+
+.room_button:active, .room_button:focus {
     outline: none;
 }
 

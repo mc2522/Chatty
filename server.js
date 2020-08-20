@@ -20,17 +20,17 @@ const names = new Set()
 const sockets = new Map()
 
 // create storage for general because it is default room
-createModel('general')
+createModel('General')
 
 io.on('connection', socket => {
     // upon connection, join general room at default
-    socket.join('general')
+    socket.join('General')
     // send all messages
-    getMessages('general', socket)
+    getMessages('General', socket)
     sockets.set(socket, {
         'name': null,
         'color': null,
-        'room': 'general'
+        'room': 'General'
     })
     // send number of users data to newly connected socket
     io.emit('numberUsers', sockets.size)
@@ -91,7 +91,7 @@ io.on('connection', socket => {
             sockets.set(socket, {
                 'name': name,
                 'color': randomColorPicker(),
-                'room': 'general'
+                'room': 'General'
             })
             // notify socket that username is available
             socket.emit('user', true)

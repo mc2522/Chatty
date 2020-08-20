@@ -27,9 +27,11 @@ const deleteCollection = room_name => {
 
 // Clears all content in a collection or clear old messages depending on everything boolean
 const clearCollection = model => {
-    model.deleteMany({}, err => {
-        if (err) console.error(err)
-    })
+    if (model != null && model != undefined) {
+        model.deleteMany({}, err => {
+            if (err) console.error(err)
+        })
+    }  
 }
 
 // Gets all messages in the room
@@ -107,10 +109,10 @@ mongoose.connection.on('open', () => {
         for (let i = 0; i < names.length; i++) {
             let collection_name = names[i].name
             // check if collection should be deleted
-            if (collection_name != 'general') {
+            if (collection_name != 'General') {
                 deleteCollection(collection_name)
             } else {
-                clearCollection(rooms.get('general'))
+                clearCollection(rooms.get('General'))
             }
         }
     })
@@ -118,7 +120,7 @@ mongoose.connection.on('open', () => {
     setInterval(() => {
         for (let model of rooms.values()) {
             // model might be null if no messages has been sent in the room
-            if (model != null) {
+            if (model != null && model != undefined) {
                 // if message is at least 20 minutes old, delete the message
                 model.deleteMany({ time: { $lte: (Date.now() - 1200000) } }, err => {
                     if (err) console.error(err)

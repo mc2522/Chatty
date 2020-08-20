@@ -24,13 +24,13 @@ const loader = document.getElementsByClassName('lds-ellipsis')
 const cancel_room_button = document.getElementById('cancel-room-button')
 
 let name = ''
-let selected_room = 'general'
+let selected_room = 'General'
 
 const addButtonEventListener = button => {
     button.addEventListener('click', e => {
         e.preventDefault()
-        socket.emit('change', button.id)
-        selected_room = button.id
+        socket.emit('change', button.innerText)
+        selected_room = button.innerText
         // delete all children of text to delete messages since changing rooms
         setTimeout(() => {
             while (text.lastElementChild)
@@ -116,7 +116,6 @@ socket.on('add-room', room_name => {
         const btn = document.createElement('button')
         btn.innerText = room_name
         btn.classList.add('room_button')
-        btn.id = room_name
         addButtonEventListener(btn)
         rooms_container.appendChild(btn)
     }, 550)
