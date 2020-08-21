@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { createModel, randomColorPicker, saveMessage, getMessages, createRoom } = require('./util')
+const { createModel, randomColorPicker, saveMessage, getMessages, createRoom, loadRooms } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -25,6 +25,8 @@ createModel('General')
 io.on('connection', socket => {
     // upon connection, join general room at default
     socket.join('General')
+    // get all rooms
+    loadRooms(socket)
     // send all messages
     getMessages('General', socket)
     sockets.set(socket, {

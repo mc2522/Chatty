@@ -47,6 +47,11 @@ const getMessages = (room_name, socket) => {
     }
 }
 
+// Gets all rooms and send data to socket
+const loadRooms = socket => {
+    socket.emit('load-rooms', Array.from(rooms.keys()))
+}
+
 // Save message in the correct collection
 const saveMessage = (room_name, name, message) => {
     let selected_room = rooms.get(room_name)
@@ -135,5 +140,6 @@ module.exports = {
     getMessages,
     randomColorPicker,
     saveMessage,
-    createRoom
+    createRoom,
+    loadRooms
 }

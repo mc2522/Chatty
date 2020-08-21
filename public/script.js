@@ -110,12 +110,22 @@ const stopLoading = () => {
     }, 1000)
 }
 
+// Remove the delete room div from the screen
 const removeDeleteRoomDiv = () => {
     delete_room_div.style.opacity = 0
     setTimeout(() => {
         delete_room_div.style.visibility = 'hidden'
     }, 500)
     container.classList.remove('background')
+}
+
+// Add a single room to room container
+const addRoom = room_name => {
+    const btn = document.createElement('button')
+    btn.innerText = room_name
+    btn.classList.add('room_button')
+    addButtonEventListener(btn)
+    rooms_container.appendChild(btn)
 }
 
 // When a message is received from server.js, display it in text 
@@ -145,6 +155,15 @@ socket.on('message', message => {
     text.scrollTop = text.scrollHeight
 })
 
+// pre-load all rooms upon new connection
+socket.on('load-rooms', room_names => {
+    for (let room_name of room_names) {
+        if (room_name != 'General')
+            addRoom(room_name)
+    }
+})
+
+// Add a single room
 socket.on('add-room', room_name => {
     // loading start
     room_loading.style.visibility = 'visible'
@@ -154,11 +173,7 @@ socket.on('add-room', room_name => {
     })
     // add buttons
     setTimeout(() => {
-        const btn = document.createElement('button')
-        btn.innerText = room_name
-        btn.classList.add('room_button')
-        addButtonEventListener(btn)
-        rooms_container.appendChild(btn)
+        addRoom(room_name)
         room_input.value = ""
     }, 550)
     // loading end
