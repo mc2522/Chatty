@@ -23,6 +23,7 @@ const deleteCollection = room_name => {
     mongoose.connection.db.dropCollection(room_name, err => {
         if (err) console.error(err)
         console.log(`${room_name} was dropped.`)
+        rooms.delete(room_name)
     })
 }
 
@@ -144,5 +145,6 @@ module.exports = {
     randomColorPicker,
     saveMessage,
     createRoom,
-    loadRooms
+    loadRooms,
+    deleteCollection
 }

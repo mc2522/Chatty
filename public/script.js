@@ -30,36 +30,41 @@ const confirm_delete = document.getElementById('confirm-delete')
 let name = ''
 let selected_room = 'General'
 
+// Loading animation for chat and room
+const loadingAnimation = change_room_name => {
+    // delete all children of text to delete messages since changing rooms
+    setTimeout(() => {
+        while (text.lastElementChild)
+            text.removeChild(text.lastElementChild)
+    }, 550)
+    // transition start for text
+    Array.from(loading).forEach(element => {
+        element.style.visibility = 'visible'
+        element.classList.add('show')
+    })
+    Array.from(loader).forEach(element => {
+        element.childNodes.forEach(child => {
+            child.style.animationPlayState = 'running'
+        })
+    })
+    // transition start for room name
+    room_name.classList.add('hide')
+    setTimeout(() => {
+        room_name.innerText = change_room_name
+    }, 250)
+    setTimeout(() => {
+        room_name.classList.remove('hide')
+    }, 250)
+    // transition end for room name
+}
+
 // Adds event listener to button argument which procs the loading screen and changes chat
 const addButtonEventListener = button => {
     button.addEventListener('click', e => {
         e.preventDefault()
         socket.emit('change', button.innerText)
         selected_room = button.innerText
-        // delete all children of text to delete messages since changing rooms
-        setTimeout(() => {
-            while (text.lastElementChild)
-                text.removeChild(text.lastElementChild)
-        }, 550)
-        // transition start for text
-        Array.from(loading).forEach(element => {
-            element.style.visibility = 'visible'
-            element.classList.add('show')
-        })
-        Array.from(loader).forEach(element => {
-            element.childNodes.forEach(child => {
-                child.style.animationPlayState = 'running'
-            })
-        })
-        // transition start for room name
-        room_name.classList.add('hide')
-        setTimeout(() => {
-            room_name.innerText = button.innerText
-        }, 250)
-        setTimeout(() => {
-            room_name.classList.remove('hide')
-        }, 250)
-        // transition end for room name
+        loadingAnimation(button.innerText)
     })
 }
 
@@ -204,7 +209,7 @@ socket.on('history', messages => {
                 let br = document.createElement('BR')
                 // set text and styling
                 username.innerText = message.name
-                username.style.color = message.color
+                username.style.color = message.color    
                 content.innerText = message.message
                 // add elements to text div
                 text.appendChild(username)
@@ -249,6 +254,7 @@ socket.on('reload', reload => {
     }
 })
 
+// add a room button
 socket.on('create-room', valid => {
     if (valid) {
         room_message.innerText = ""
@@ -260,6 +266,20 @@ socket.on('create-room', valid => {
     } else {
         room_message.innerText = "Room name has been taken already, select another room name."
     }
+})
+
+// if selected_room is affected, go to general
+socket.on('leave-room', room_name => {
+    if (selected_room == room_name) {
+        socket.emit('change', 'General')
+        selected_room = 'General'
+        loadingAnimation('General')
+    }
+    // delete room
+    rooms_container.childNodes.forEach(child => {
+        if (child.innerText == room_name)
+            rooms_container.removeChild(child)
+    })
 })
 
 // Send name to server on enter
@@ -335,6 +355,7 @@ delete_room_button.addEventListener('click', e => {
 decline_delete.addEventListener('click', e => {
     e.preventDefault()
     removeDeleteRoomDiv()
+    socket.emit('delete-room', selected_room)
 })
 
 // Button to confirm delete room

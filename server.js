@@ -4,7 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 
 // DB storage
-const { createModel, randomColorPicker, saveMessage, getMessages, createRoom, loadRooms } = require('./util')
+const { createModel, randomColorPicker, saveMessage, getMessages, createRoom, loadRooms, deleteCollection } = require('./util')
 
 const app = express()
 const server = http.createServer(app)
@@ -103,7 +103,9 @@ io.on('connection', socket => {
     })
     // delete room
     socket.on('delete-room', room_name => {
-        // do something
+        // delete the collection from db and notify all sockets to leave the room if necessary
+        deleteCollection(room_name)
+        io.emit('leave-room', room_name)
     }) 
     // on disconnect, remove the socket and name
     socket.on('disconnect', () => {
