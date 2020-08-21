@@ -5,6 +5,7 @@
     --color4: #e43f5a;
     --color5: #e5eaf5;
     --color6: #17355a;
+    --color7: #b61f39;
     --text-color: #E65800;
     --header-font: 'Asap Condensed', sans-serif;
     --text-font: 'Noto Sans', sans-serif;
@@ -114,7 +115,8 @@ input:focus {
     font-family: var(--header-font);
     background-color: var(--color4);
     border: none;
-    color: var(--color5)
+    color: var(--color5);
+    transition: 0.25s;
 }
 
 #online-formatter {
@@ -129,6 +131,53 @@ input:focus {
 
 #submit-button:active, #submit-button:hover, #submit-button:focus {
     outline: none;
+}
+
+#delete-room-div {
+    position: absolute;
+    background-color: var(--color4);
+    width: 50%;
+    height: 50%;
+    z-index: 8999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+}
+
+#confirm-delete, #decline-delete {
+    border: none;
+    margin: 5px;
+}
+
+#confirm-delete:active, #confirm-delete:focus, #decline-delete:active, #decline-delete:focus {
+    outline: none;
+}
+
+#confirm-delete {
+    background-color: var(--color5);
+    color: var(--color4);
+    transition: 0.25s;
+}
+
+#confirm-delete:hover {
+    background-color: var(--color7);
+    color: var(--color5);
+}
+
+#decline-delete {
+    background-color: var(--color2);
+    color: var(--color5);
+    transition: 0.25s;
+}
+
+#decline-delete:hover {
+    background-color: var(--color3);
+}
+
+#delete-room-div>h2 {
+    text-align: center;
 }
 
 #container {
@@ -208,6 +257,7 @@ input:focus {
     font-size: 1em;
     text-overflow: ellipsis;
     overflow: hidden;
+    transition: 0.25s;
 }
 
 .room_button:hover {
@@ -221,6 +271,34 @@ input:focus {
 
 #room_name_background {
     background-color: var(--color6);
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#delete_room {
+    height: 60%;
+    margin-right: 10px;
+    border-radius: 25px;
+    border: none;
+    font-family: var(--header-font);
+    color: var(--color5);
+    background-color: var(--color4);
+    font-size: 1.1em;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 4px 15px;
+    transition: 0.25s;
+}
+
+#delete_room:hover {
+    background-color: var(--color7);
+}
+
+#delete_room:active, #delete_room:focus {
+    outline: none;
 }
 
 #room_name {
@@ -228,7 +306,6 @@ input:focus {
     color: var(--color5);
     padding: 5px 10px;
     margin: 0;
-    height: 10%;
     opacity: 1;
     transition: all 0.5s;
 }
@@ -400,6 +477,11 @@ input:focus {
     font-size: 1.1em;
     border-radius: 25px;
     border: none;
+    transition: 0.25s;
+}
+
+#add-room:hover, #submit-button:hover {
+    background-color: var(--color7);
 }
 
 #add-room:active, #add-room:focus {
@@ -457,6 +539,7 @@ input:focus {
     border: none;
     margin-bottom: 10px;
     font-weight: bold;
+    transition: 0.25s;
 }
 
 #room-submit-button:active, #room-submit-button:focus, #cancel-room-button:active, #cancel-room-button:focus {
@@ -468,7 +551,16 @@ input:focus {
     color: var(--color4);
 }
 
-#cancel-room-button {
-    background-color: var(--color1);
+#room-submit-button:hover {
+    background-color: var(--color7);
     color: var(--color5);
+}
+
+#cancel-room-button {
+    background-color: var(--color2);
+    color: var(--color5);
+}
+
+#cancel-room-button:hover {
+    background-color: var(--color3);
 }

@@ -58,6 +58,32 @@ const addButtonEventListener = button => {
     })
 }
 
+const nameEvent = () => {
+    let username = name_input.value
+    // check if name is too long (max 20 characters)
+    if (username.length > 20) {
+        name_message.innerText = 'Name exceeds max characters (20).'
+    // check if only white space
+    } else if (!(/\S/gm).test(username)) {
+        name_message.innerText = 'Name needs to have at least one character.'
+    } else {
+        // send name to server for verification
+        socket.emit('name', username.trim())
+    }
+}
+
+const addRoomEvent = () => {
+    let check = room_input.value.trim()
+    if (check.length > 10) {
+        room_message.innerText = 'Room name exceeds max characters (10).'
+    // check if only white space
+    } else if ((/\S/gm).test(check)) {
+        socket.emit('create-room', check)
+    } else {
+        room_message.innerText = 'Room name needs to have at least one character.'
+    }
+}
+
 // Stop loading in chat
 const stopLoading = () => {
     setTimeout(() => {
@@ -118,6 +144,7 @@ socket.on('add-room', room_name => {
         btn.classList.add('room_button')
         addButtonEventListener(btn)
         rooms_container.appendChild(btn)
+        room_input.value = ""
     }, 550)
     // loading end
     setTimeout(() => {
@@ -209,33 +236,14 @@ socket.on('create-room', valid => {
 name_input.addEventListener('keypress', e => {
     if (e.keyCode == 13) {
         e.preventDefault()
-        let username = name_input.value
-        // check if name is too long (max 20 characters)
-        if (username.length > 20) {
-            name_message.innerText = 'Name exceeds max characters (20).'
-        // check if only white space
-        } else if (!(/\S/gm).test(username)) {
-            name_message.innerText = 'Name needs to have at least one character.'
-        } else {
-            socket.emit('name', username.trim())
-        }
+        nameEvent()
     }
 })
 
 // send name to server on submit
 submit_button.addEventListener('click', e => {
     e.preventDefault()
-    let username = name_input.value
-    // check if name is too long (max 20 characters)
-    if (username.length > 20) {
-        name_message.innerText = 'Name exceeds max characters (20).'
-    // check if only white space
-    } else if (!(/\S/gm).test(username)) {
-        name_message.innerText = 'Name needs to have at least one character.'
-    } else {
-        // send name to server for verification
-        socket.emit('name', username.trim())
-    }
+    nameEvent()
 })
 
 // Press enter to send message and clear input 
@@ -260,17 +268,18 @@ add_room_button.addEventListener('click', e => {
     add_room_div.classList.add('reveal')
 })
 
+// Add event listener to input field for enter for adding room
+room_input.addEventListener('keypress', e => {
+    if (e.keyCode == 13) {
+        e.preventDefault()
+        addRoomEvent()
+    }
+})
+
 // Add event listener to submit button for adding room
 room_submit_buttom.addEventListener('click', e => {
-    let check = room_input.value.trim()
-    if (check.length > 10) {
-        room_message.innerText = 'Room name exceeds max characters (10).'
-    // check if only white space
-    } else if ((/\S/gm).test(check)) {
-        socket.emit('create-room', check)
-    } else {
-        room_message.innerText = 'Room name needs to have at least one character.'
-    }
+    e.preventDefault()
+    addRoomEvent()
 })
 
 // Add event lister to cancel room button
@@ -281,6 +290,7 @@ cancel_room_button.addEventListener('click', e => {
         add_room_div.style.visibility = 'hidden';
     }, 500)
     room_message.innerText = ""
+    room_input.value = ""
 })
 
 // Add event listener to room buttons
