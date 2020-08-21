@@ -40,7 +40,7 @@ io.on('connection', socket => {
     socket.on('message', message => {
         let socketProps = sockets.get(socket)
         if (socketProps != null && socketProps.name != null) {
-            saveMessage(message.room_name, socketProps.name, message.content)
+            saveMessage(message.room_name, socketProps.name, socketProps.color, message.content)
             // send message to all sockets TODO rooms
             io.to(message.room_name).emit('message', {
                 'name': socketProps.name,

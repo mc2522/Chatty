@@ -204,7 +204,7 @@ socket.on('history', messages => {
                 let br = document.createElement('BR')
                 // set text and styling
                 username.innerText = message.name
-                username.style.color = '#5c6778'
+                username.style.color = message.color
                 content.innerText = message.message
                 // add elements to text div
                 text.appendChild(username)

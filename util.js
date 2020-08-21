@@ -12,6 +12,7 @@ const createModel = room_name => {
     const schema = new mongoose.Schema({
         name: String,
         message: String,
+        color: String,
         time: Number
     }, { collection: room_name, size: 5000 }) 
     rooms.set(room_name, new mongoose.model(room_name, schema))
@@ -53,12 +54,13 @@ const loadRooms = socket => {
 }
 
 // Save message in the correct collection
-const saveMessage = (room_name, name, message) => {
+const saveMessage = (room_name, name, color, message) => {
     let selected_room = rooms.get(room_name)
     if (selected_room != undefined) {
         selected_room({
             name: name,
             message: message,
+            color: color,
             time: Date.now()
         }).save(err => {
             if (err) console.error(err)
@@ -69,6 +71,7 @@ const saveMessage = (room_name, name, message) => {
         rooms.get(room_name)({
             name: name,
             message: message,
+            color: color,
             time: Date.now()
         }).save(err => {
             if (err) console.error(err)
@@ -96,7 +99,7 @@ const randomColorPicker = () => {
         value: 1,
         golden: false,
         format: 'hex'
-    })
+    })[0]
 }
 
 // MongoDB setup
