@@ -22,10 +22,15 @@ const room_message = document.getElementById('room-message')
 const room_submit_buttom = document.getElementById('room-submit-button')
 const loader = document.getElementsByClassName('lds-ellipsis')
 const cancel_room_button = document.getElementById('cancel-room-button')
+const delete_room_div = document.getElementById('delete-room-div')
+const delete_room_button = document.getElementById('delete_room')
+const decline_delete = document.getElementById('decline-delete')
+const confirm_delete = document.getElementById('confirm-delete')
 
 let name = ''
 let selected_room = 'General'
 
+// Adds event listener to button argument which procs the loading screen and changes chat
 const addButtonEventListener = button => {
     button.addEventListener('click', e => {
         e.preventDefault()
@@ -58,6 +63,7 @@ const addButtonEventListener = button => {
     })
 }
 
+// Checks if the name is valid length-wise and emits name to server
 const nameEvent = () => {
     let username = name_input.value
     // check if name is too long (max 20 characters)
@@ -72,6 +78,7 @@ const nameEvent = () => {
     }
 }
 
+// Checks if the name is valid length-wise and emits name to server
 const addRoomEvent = () => {
     let check = room_input.value.trim()
     if (check.length > 10) {
@@ -101,6 +108,14 @@ const stopLoading = () => {
             })
         })
     }, 1000)
+}
+
+const removeDeleteRoomDiv = () => {
+    delete_room_div.style.opacity = 0
+    setTimeout(() => {
+        delete_room_div.style.visibility = 'hidden'
+    }, 500)
+    container.classList.remove('background')
 }
 
 // When a message is received from server.js, display it in text 
@@ -282,7 +297,7 @@ room_submit_buttom.addEventListener('click', e => {
     addRoomEvent()
 })
 
-// Add event lister to cancel room button
+// Add event listener to cancel room button
 cancel_room_button.addEventListener('click', e => {
     add_room_div.classList.remove('reveal')
     container.classList.remove('background')
@@ -291,6 +306,28 @@ cancel_room_button.addEventListener('click', e => {
     }, 500)
     room_message.innerText = ""
     room_input.value = ""
+})
+
+// Add event listener to delete room button to make confirmation div appear
+delete_room_button.addEventListener('click', e => {
+    e.preventDefault()
+    delete_room_div.style.visibility = 'visible'
+    delete_room_div.style.opacity = 1
+    container.classList.add('background')
+})
+
+// Button to not delete room
+decline_delete.addEventListener('click', e => {
+    e.preventDefault()
+    removeDeleteRoomDiv()
+})
+
+// Button to confirm delete room
+confirm_delete.addEventListener('click', e => {
+    e.preventDefault()
+    // notify server to delete the room
+    socket.emit('delete-room', selected_room)
+    removeDeleteRoomDiv()
 })
 
 // Add event listener to room buttons

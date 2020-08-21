@@ -49,7 +49,7 @@ io.on('connection', socket => {
             socket.emit('reload', true)
         }
     })
-    // On change to another room, send backlog of messages
+    // on change to another room, send backlog of messages
     socket.on('change', room_name => {
         let val = sockets.get(socket)
         // check if this user is already identified before proceeding
@@ -75,11 +75,11 @@ io.on('connection', socket => {
             socket.emit('reload', true)
         }
     }) 
-    // Create room if name has not been taken
+    // create room if name has not been taken
     socket.on('create-room', room_name => {
         createRoom(room_name, socket, io)
     })
-    // Check if name exists already, then add as appropriate
+    // check if name exists already, then add as appropriate
     socket.on('name', name => {
         if (names.has(name)) {
             // notify socket that username is unavailable
@@ -99,6 +99,10 @@ io.on('connection', socket => {
             io.emit('numberUsers', sockets.size)
         }
     })
+    // delete room
+    socket.on('delete-room', room_name => {
+        // do something
+    }) 
     // on disconnect, remove the socket and name
     socket.on('disconnect', () => {
         // remove name from in-use names
