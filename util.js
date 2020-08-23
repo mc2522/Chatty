@@ -107,6 +107,8 @@ const randomColorPicker = () => {
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@data-stno8.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
+}, err => {
+    console.log(err)
 })
 
 // Upon connecting, delete all unused collections
