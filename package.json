@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "engines": {
-    "node": "10.16.0"
+    "node": "12.18.0"
   },
   "author": "Mike Cao",
   "license": "ISC",
