@@ -62,6 +62,15 @@ const loadingAnimation = change_room_name => {
 const addButtonEventListener = button => {
     button.addEventListener('click', e => {
         e.preventDefault()
+        if (button.innerText == 'General') {
+            delete_room_button.style.opacity = 0
+            setTimeout(() => {
+                delete_room_button.style.visibility = 'hidden'
+            }, 250)
+        } else {
+            delete_room_button.style.visibility = 'visible'
+            delete_room_button.style.opacity = 1;
+        }
         socket.emit('change', button.innerText)
         selected_room = button.innerText
         loadingAnimation(button.innerText)
@@ -362,7 +371,8 @@ decline_delete.addEventListener('click', e => {
 confirm_delete.addEventListener('click', e => {
     e.preventDefault()
     // notify server to delete the room
-    socket.emit('delete-room', selected_room)
+    if (selected_room != 'General') 
+        socket.emit('delete-room', selected_room)
     removeDeleteRoomDiv()
 })
 
