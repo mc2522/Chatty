@@ -40,10 +40,5 @@ Rooms can be deleted by clicking the **Delete Room** button on the upper right h
 
 <br>
 
-## Installation
-To install all required modules, run the following command: `npm install`
-
-<br>
-
-## Run
-To run the code, run the following command: `npm run dev`
+## Try Chatty Out
+[Chatty Link](https://chatty-mc2522.herokuapp.com/)
